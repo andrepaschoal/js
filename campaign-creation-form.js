@@ -1,5 +1,5 @@
   console.log('opa');
 
-$('CampTipoAcao').change(function() {
+$('#CampTipoAcao').change(function() {
   console.log('TipoAcao');
 });
