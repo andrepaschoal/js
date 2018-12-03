@@ -94,3 +94,7 @@ app.controller('approvalCtrl', ['$scope', '$http', function ($scope, $http) {
 
 
 }]);
+
+angular.element(function () {
+    angular.bootstrap(document, ['dotzCampaign']);
+});
