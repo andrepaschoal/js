@@ -65,20 +65,20 @@ app.controller('approvalCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.approval = function (campaing) {
 
-        const url = 'puturl';
-        const data = 'parameters';
+        const url = `http://dotz-nest.reddrummer.com/api/campaigns/${campaign._id}/approve`;
+        const data = 'author=andre.paschoal@reddrummer.com';
         const config = 'contenttype';
 
         // TODO Remover essa linha quando possuir a URL correta do serviço
-        $scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
+        //$scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
 
-        // $http.put(url, data, config)
-        //     .then(function (response) {
-        //         $scope.data = response.data;
-        //         $scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
-        //     }), function (response) {
-        //         $scope.alerts = [{ type: 'danger', msg: 'Erro ao Aprovar a campanha.' }];
-        //     };
+        $http.put(url, data, config)
+            .then(function (response) {
+                $scope.data = response.data;
+                $scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
+            }), function (response) {
+                $scope.alerts = [{ type: 'danger', msg: 'Erro ao Aprovar a campanha.' }];
+            };
     }
 
     $scope.filter = function () {
