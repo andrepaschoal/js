@@ -12,7 +12,7 @@ $('#CampTipoAcao').change(function (event) {
 	}
 });
 
-$('#preview-icon-container').tooltip({ title: 'opa' });
+$('#preview-icon-container').tooltip({ title: 'Clique para ver o Layout' });
 $('#preview-icon').click(function () {
 	console.log(`[cc][PreviewIcon.click]`);
 	if ($(this).hasClass('disabled')) {
