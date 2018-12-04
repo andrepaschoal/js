@@ -69,9 +69,14 @@ app.controller('CaController', function ($scope) {
             }
         };
 
-        fetch(`${server}/campaigns/${campaign._id}/approve`, options)
+        let url = new URL(`${server}/campaigns/${campaign._id}/approve`),
+            params = { author: 'andre.paschoal@reddrummer.com' };
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+        fetch(url, options)
             .then(response => {
                 campaign.approvedAt = new Date();
+                $scope.$apply();
                 console.log(response);
             }).catch(err => {
                 console.dir(err, { depth: null });
