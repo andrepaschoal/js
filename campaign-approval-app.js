@@ -27,8 +27,8 @@ app.controller('CaController', function ($scope) {
     };
 
     $scope.load = function () {
-        $scope.data = $scope.getHardCodedCampaigns();
-        return;
+        //$scope.data = $scope.getHardCodedCampaigns();
+        //return;
         fetch(`${server}/campaigns`).then(data => data.json())
             .then(data => {
                 console.log(data);
