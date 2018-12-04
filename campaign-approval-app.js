@@ -1,47 +1,27 @@
-var app = angular.module('dotzCampaign', ['ui.bootstrap']);
+const server = 'http://dotz-nest.reddrummer.com/api/';
 
-app.controller('approvalCtrl', ['$scope', '$http', function ($scope, $http) {
+// retrieves the module
+let app = angular.module('CaApp', ['ui.bootstrap']);
 
-    $scope.alerts = [];
-
-    $scope.closeAlert = function (index) {
-        $scope.alerts.splice(index, 1);
-    };
-
-    $scope.filters = {
-        checkboxModel: {
-            onlyApproved: false
+app.filter('startFrom', function () {
+    return function (input, start) {
+        if (input) {
+            start = +start;
+            return input.slice(start);
         }
+        return [];
     };
+});
 
-    $scope.fetch = function () {
-        const urlToService = "http://dotz-nest.reddrummer.com/api/campaigns";
+app.controller('CaController', function ($scope) {
 
-        $http.get(urlToService)
-            .then(function (response) {
-                $scope._data = response.data;
-                $scope.data = response.data;
-                $scope.data = $scope.page.paginate($scope.data);
-            });
-    };
+    $scope.title = 'Aprovação de Campanha';
 
-    $scope.page = {
-        current: 1,
-        rows: 10,
-
-        paginate: function (data) {
-            if (data) {
-                let index = (this.current - 1) * this.rows;
-                return data.slice(index, index + this.rows);
-            }
-        }
-    };
-
-    $scope.paginate = function () {
-        $scope.data = $scope.page.paginate($scope._data);
-    }
+    $scope.data = [];
+    $scope.filter = {};
 
     $scope.sort = function (by) {
+        console.log(`sorting by ${by}... previous sort ${JSON.stringify(this.sorting)}`);
         let asc = true;
 
         if (this.sorting && this.sorting.by === by) {
@@ -63,38 +43,68 @@ app.controller('approvalCtrl', ['$scope', '$http', function ($scope, $http) {
         this.data = this.page.paginate(this._data);
     }
 
-    $scope.approval = function (campaing) {
-
-        const url = `http://dotz-nest.reddrummer.com/api/campaigns/${campaign._id}/approve`;
-        const data = 'author=andre.paschoal@reddrummer.com';
-        const config = 'contenttype';
-
-        // TODO Remover essa linha quando possuir a URL correta do serviço
-        //$scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
-
-        $http.put(url, data, config)
-            .then(function (response) {
-                $scope.data = response.data;
-                $scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
-            }), function (response) {
-                $scope.alerts = [{ type: 'danger', msg: 'Erro ao Aprovar a campanha.' }];
-            };
-    }
-
-    $scope.filter = function () {
-        const urlToServiceApproved = "http://dotz-nest.reddrummer.com/api/campaigns?approvedAtNull=" + $scope.filters.checkboxModel.onlyApproved;
-
-        $http.get(urlToServiceApproved)
-            .then(function (response) {
-                $scope._data = response.data;
-                $scope.data = response.data;
-                $scope.data = $scope.page.paginate($scope.data);
+    $scope.load = function () {
+        fetch(`${server}/campaigns`).then(data => data.json())
+            .then(data => {
+                console.log(data);
+                $scope.data = data;
+                //$scope._data = this.getHardCodedCampaigns();
+                //$scope.data = $scope.page.paginate($scope._data);
+                $scope.$apply();
+            }).catch(err => {
+                console.dir(err, { depth: null });
             });
     }
 
+    $scope.approve = function (campaign) {
+        console.info(`Approving campaign ${campaign._id} - ${campaign.CampNome}`);
+        const options = {
+            method: 'POST',
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            body: {
+                "author": 'andre.paschoal@reddrummer.com'
+            }
+        };
 
-}]);
+        fetch(`${server}/campaigns/${campaign._id}/approve`, options)
+            .then(response => {
+                campaign.approvedAt = new Date();
+                console.log(response);
+            }).catch(err => {
+                console.dir(err, { depth: null });
+            });
 
-angular.element(function () {
-    angular.bootstrap(document, ['dotzCampaign']);
+    }
+
+    this.getHardCodedCampaigns = function () {
+        let data = [];
+        for (i = 0; i < 100; i++) {
+            data.push({ id: i, title: `title ${i}`, partner: `partner ${i}` });
+        }
+        return data;
+
+        return [
+            { id: 1, title: 'Julietto', partner: 'Julietto', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 2, title: 'Banco do Brasil', partner: 'Banco do Brasil', approvedBy: 'Josemando Sobral', approvalDate: '20/10/2018', sfId: null },
+            { id: 3, title: 'Prezunic', partner: 'Prezunic', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 4, title: 'ALE', partner: 'ALE', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 5, title: 'BIBI', partner: 'BIBI', approvedBy: 'José Marconi', approvalDate: '12/09/2018', sfId: null },
+            { id: 1, title: 'Julietto', partner: 'Julietto', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 2, title: 'Banco do Brasil', partner: 'Banco do Brasil', approvedBy: 'Josemando Sobral', approvalDate: '20/10/2018', sfId: null },
+            { id: 3, title: 'Prezunic', partner: 'Prezunic', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 4, title: 'ALE', partner: 'ALE', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 5, title: 'BIBI', partner: 'BIBI', approvedBy: 'José Marconi', approvalDate: '12/09/2018', sfId: null },
+            { id: 1, title: 'Julietto', partner: 'Julietto', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 2, title: 'Banco do Brasil', partner: 'Banco do Brasil', approvedBy: 'Josemando Sobral', approvalDate: '20/10/2018', sfId: null },
+            { id: 3, title: 'Prezunic', partner: 'Prezunic', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 4, title: 'ALE', partner: 'ALE', approvedBy: null, approvalDate: null, sfId: null },
+            { id: 5, title: 'BIBI', partner: 'BIBI', approvedBy: 'José Marconi', approvalDate: '12/09/2018', sfId: null },
+        ];
+    }
 });
+
+// bootstrap CampaignApprovalApp
+angular.bootstrap(document.getElementById('ca-root'), ['CaApp']);
