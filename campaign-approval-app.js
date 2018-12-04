@@ -1,7 +1,5 @@
-const server = 'http://dotz-nest.reddrummer.com/api/';
-
 // retrieves the module
-let app = angular.module('CaApp', []);
+let app = angular.module('CaApp', ['ui.bootstrap']);
 
 app.filter('startFrom', function () {
     return function (input, start) {
@@ -16,25 +14,30 @@ app.filter('startFrom', function () {
 app.controller('CaController', function ($scope) {
 
     $scope.title = 'Aprovação de Campanha';
+    $scope.server = 'http://dotz-nest.reddrummer.com/api/';
+
+    $scope.itemsPerPage = 10;
+    $scope.page = 1;
 
     $scope.data = [];
     $scope.filter = {};
     $scope.order = '';
 
+    $scope.setPage = function (page) {
+        $scope.page = page;
+    }
+
     $scope.setOrder = function (order) {
-        $scope.order = order;
-        $scope.apply();
+        $scope.order = (order == $scope.order ? '-' : '') + order;
     };
 
     $scope.load = function () {
         //$scope.data = $scope.getHardCodedCampaigns();
         //return;
-        fetch(`${server}/campaigns`).then(data => data.json())
+        fetch(`${$scope.server}/campaigns`).then(data => data.json())
             .then(data => {
-                console.log(data);
+                console.log(`${data.length} campaigns retrieved`);
                 $scope.data = data;
-                //$scope._data = this.getHardCodedCampaigns();
-                //$scope.data = $scope.page.paginate($scope._data);
                 $scope.$apply();
             }).catch(err => {
                 console.dir(err, { depth: null });
@@ -54,7 +57,7 @@ app.controller('CaController', function ($scope) {
             }
         };
 
-        let url = new URL(`${server}/campaigns/${campaign._id}/approve`),
+        let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`),
             params = { author: 'andre.paschoal@reddrummer.com' };
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
@@ -66,16 +69,16 @@ app.controller('CaController', function ($scope) {
             }).catch(err => {
                 console.dir(err, { depth: null });
             });
-
     }
 
     $scope.getHardCodedCampaigns = function () {
-        
+        /*
         let data = [];
         for (i = 0; i < 100; i++) {
             data.push({ id: i, title: `title ${i}`, partner: `partner ${i}` });
         }
         return data;
+        */
     }
 });
 
