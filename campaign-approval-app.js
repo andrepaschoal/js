@@ -58,6 +58,7 @@ app.controller('CaController', function ($scope) {
             }
         };
 
+        let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`);
         fetch(url, options)
             .then(response => {
                 campaign.approvedAt = new Date();
