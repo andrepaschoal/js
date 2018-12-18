@@ -1,6 +1,8 @@
 // retrieves the module
 let app = angular.module('CaApp', []);
 
+if (drumwaveStageUser) console.log(drumwaveStageUser);
+
 app.filter('startFrom', function () {
     return function (input, start) {
         if (input) {
