@@ -45,7 +45,8 @@ app.controller('CaController', function ($scope) {
     }
 
     $scope.approve = function (campaign) {
-        console.info(`Approving campaign ${campaign._id} - ${campaign.CampNome}`);
+        const user = localStorage.drumwaveStageUser;
+        console.info(`Approving campaign ${campaign._id} - ${campaign.CampNome} by ${user}`);
         const options = {
             method: 'POST',
             mode: "no-cors",
@@ -53,11 +54,9 @@ app.controller('CaController', function ($scope) {
                 "Content-Type": "application/json; charset=utf-8",
             },
             body: {
-                "author": 'andre.paschoal@reddrummer.com'
+                "author": user
             }
         };
-
-        let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`);
 
         fetch(url, options)
             .then(response => {
