@@ -1,5 +1,5 @@
 // retrieves the module
-let app = angular.module('CaApp', ['ui.bootstrap']);
+let app = angular.module('CaApp', []);
 
 app.filter('startFrom', function () {
     return function (input, start) {
