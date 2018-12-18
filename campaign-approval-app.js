@@ -59,9 +59,7 @@ app.controller('CaController', function ($scope) {
             }
         };
 
-        let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`),
-            params = { author: 'andre.paschoal@reddrummer.com' };
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`);
 
         fetch(url, options)
             .then(response => {
