@@ -20,7 +20,7 @@ app.controller('CaController', ['$scope', '$http', function ($scope, $http) {
     $scope.page = 1;
 
     $scope.data = [];
-    $scope.filter = { approvedAt: "" };
+    $scope.filter = {};
     $scope.order = '';
 
     $scope.setPage = function (page) {
