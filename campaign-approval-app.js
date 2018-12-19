@@ -58,8 +58,9 @@ app.controller('CaController', ['$scope', '$http', function ($scope, $http) {
             body: fd
 
         }).then(function (response) {
-            console.log(response);
-
+                campaign.approvedAt = new Date();
+                $scope.$apply();
+                console.log(response);
         }).catch(err => {
             console.log(err);
         });
