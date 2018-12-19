@@ -48,7 +48,7 @@ app.controller('CaController', ['$scope', '$http', function ($scope, $http) {
         const user = localStorage.drumwaveStageUser;
         console.info(`Approving campaign ${campaign._id} - ${campaign.CampNome} by ${user}`);
 
-        let url = 'http://dotz-nest.reddrummer.com/api//campaigns/5c196605e43e9f007a6364f7/approve';
+        let url = `${$scope.server}/campaigns/${campaign._id}/approve`;;
 
         let fd = new URLSearchParams();
         fd.append('author', user);
