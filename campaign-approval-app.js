@@ -11,7 +11,7 @@ app.filter('startFrom', function () {
     };
 });
 
-app.controller('CaController', function ($scope) {
+app.controller('CaController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.title = 'Aprovação de Campanha';
     $scope.server = 'http://dotz-nest.reddrummer.com/api/';
@@ -20,7 +20,7 @@ app.controller('CaController', function ($scope) {
     $scope.page = 1;
 
     $scope.data = [];
-    $scope.filter = {};
+    $scope.filter = { approvedAt: "" };
     $scope.order = '';
 
     $scope.setPage = function (page) {
@@ -47,15 +47,48 @@ app.controller('CaController', function ($scope) {
     $scope.approve = function (campaign) {
         const user = localStorage.drumwaveStageUser;
         console.info(`Approving campaign ${campaign._id} - ${campaign.CampNome} by ${user}`);
+
+        let url = 'http://dotz-nest.reddrummer.com/api//campaigns/5c196605e43e9f007a6364f7/approve';
+
+        let fd = new URLSearchParams();
+        fd.append('author', user);
+
+        fetch(url, {
+            method: 'POST',
+            body: fd
+
+        }).then(function (response) {
+            console.log(response);
+
+        }).catch(err => {
+            console.log(err);
+        });
+
+        /*
+        const url = `${$scope.server}/campaigns/${campaign._id}/approve`;
+        const data = `author=${user}`;
+
+        //$scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
+
+        $http.put(url, data, { 'Content-Type': 'application/json' })
+            .then(function (response) {
+                $scope.data = response.data;
+                $scope.alerts = [{ type: 'success', msg: 'Campanha aprovada com sucesso.' }];
+            }), function (response) {
+                $scope.alerts = [{ type: 'danger', msg: 'Erro ao Aprovar a campanha.' }];
+            };
+
+        return;
+        */
+        /*
         const options = {
             method: 'POST',
             mode: "no-cors",
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: {
-                "author": user
-            }
+            body: JSON.stringify({ "author": user })
         };
 
         let url = new URL(`${$scope.server}/campaigns/${campaign._id}/approve`);
@@ -67,6 +100,7 @@ app.controller('CaController', function ($scope) {
             }).catch(err => {
                 console.dir(err, { depth: null });
             });
+            */
     }
 
     $scope.getHardCodedCampaigns = function () {
@@ -78,7 +112,7 @@ app.controller('CaController', function ($scope) {
         return data;
         */
     }
-});
+}]);
 
 // bootstrap CampaignApprovalApp
 angular.bootstrap(document.getElementById('ca-root'), ['CaApp']);
